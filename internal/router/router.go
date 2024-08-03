@@ -20,7 +20,7 @@ func NewRouter(db *gorm.DB, client *redis.Client, cnf *config.Config) *chi.Mux {
 	// ***
 	authHandler := InitializeAuth(db, cnf)
 	r.Route("/v1", func(r chi.Router) {
-		r.Use(middlewares.RateLimiter(client))
+		// r.Use(middlewares.RateLimiter(client))
 		r.Post("/validate", authHandler.ValidatePhone)
 		r.Route("/", func(r chi.Router) {
 			r.Use(middlewares.PhoneMiddleware(cnf.JwtSecret))
