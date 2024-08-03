@@ -13,7 +13,7 @@ func main() {
 	// load config
 	config, err := config.LoadConfig(".env")
 	if err != nil {
-		log.Fatal("Error In Loading Config")
+		log.Fatalf("Error In Loading Config %v", err)
 	}
 	runner, err := db.RunDB(config)
 	if err != nil {

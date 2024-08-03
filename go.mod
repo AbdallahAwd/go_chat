@@ -1,6 +1,6 @@
 module chat_app
 
-go 1.22.3
+go 1.20
 
 require (
 	github.com/go-chi/chi v1.5.5
