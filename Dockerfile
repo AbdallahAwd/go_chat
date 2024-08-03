@@ -4,7 +4,7 @@ FROM golang:1.20-alpine AS builder
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Copy go mod and sum files
+# Copy go.mod and go.sum files
 COPY go.mod ./
 COPY go.sum ./
 
@@ -20,8 +20,6 @@ RUN go build -o /chat_app ./cmd/main.go
 # Final stage
 FROM alpine:latest  
 
-# Set environment variables
-ENV GIN_MODE=release
 
 # Set the Current Working Directory inside the container
 WORKDIR /root/
