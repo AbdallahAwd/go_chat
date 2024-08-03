@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"chat_app/pkg/analytics"
 	"chat_app/pkg/utils"
 	"context"
 	"fmt"
@@ -11,7 +12,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthMiddleware(jwtSecret string) func(http.Handler) http.Handler {
+func AuthMiddleware(jwtSecret string, analyze *analytics.Analyze) func(http.Handler) http.Handler {
+
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			authToken := r.Header.Get("Authorization")
@@ -44,6 +46,9 @@ func AuthMiddleware(jwtSecret string) func(http.Handler) http.Handler {
 				}
 
 				ctx := context.WithValue(r.Context(), utils.ID, ID)
+
+				analyze.Handler(w, r)
+
 				next.ServeHTTP(w, r.WithContext(ctx))
 			} else {
 				utils.ErrorJSON(w, "Invalid token claims", http.StatusUnauthorized)

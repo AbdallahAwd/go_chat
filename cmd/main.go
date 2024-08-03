@@ -27,7 +27,7 @@ func main() {
 	r := router.NewRouter(runner.DB, runner.Client, config)
 
 	utils.Print("Server Started At....", config.ServerAddress)
-	if err := http.ListenAndServe(":8080", r); err != nil {
+	if err := http.ListenAndServe(config.ServerAddress, r); err != nil {
 		log.Fatalf("Error In Serving %v", err)
 
 	}
