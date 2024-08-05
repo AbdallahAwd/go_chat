@@ -16,9 +16,16 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeAuth(db *gorm.DB, conf *config.Config) *handlers.AuthHandler {
+func InitializeAuthHanlder(db *gorm.DB, conf *config.Config) *handlers.AuthHandler {
 	authRepository := repositories.NewAuthRepository(db)
 	authService := services.NewAuthService(authRepository, conf)
 	authHandler := handlers.NewAuthHandler(authService)
 	return authHandler
+}
+
+func InitializeChatHanlder(db *gorm.DB, conf *config.Config) *handlers.ChatHandler {
+	chatRepo := repositories.NewChatRepo(db)
+	chatService := services.NewChatService(chatRepo)
+	chatHandler := handlers.NewChathandler(chatService , conf.JwtSecret)
+	return chatHandler
 }
