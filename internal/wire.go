@@ -1,4 +1,4 @@
-package router
+package internal
 
 import (
 	"chat_app/config"
@@ -17,4 +17,12 @@ func InitializeAuthHanlder(db *gorm.DB, conf *config.Config) *handlers.AuthHandl
 		handlers.NewAuthHandler,
 	)
 	return &handlers.AuthHandler{}
+}
+func InitializeChatHanlder(db *gorm.DB, conf *config.Config) *handlers.ChatHandler {
+	wire.Build(
+		repositories.NewChatRepo,
+		services.NewChatService,
+		handlers.NewChathandler,
+	)
+	return &handlers.ChatHandler{}
 }

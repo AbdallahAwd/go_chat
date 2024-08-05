@@ -8,5 +8,5 @@ type User struct {
 	CountryCode       string
 	Image             string
 	NotificationToken string
-	Phone             string `gorm:"unique"`
+	Phone             string `gorm:"unique;index"`
 }

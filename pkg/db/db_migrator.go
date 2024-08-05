@@ -42,5 +42,5 @@ func RunDB(config *config.Config) (*DBRunner, error) {
 }
 
 func (rDB *DBRunner) Migrate() error {
-	return rDB.DB.AutoMigrate(&models.User{})
+	return rDB.DB.AutoMigrate(&models.User{}, &models.Message{})
 }

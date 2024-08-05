@@ -22,16 +22,21 @@ func NewRouter(db *gorm.DB, client *redis.Client, cnf *config.Config) *chi.Mux {
 	fs := http.FileServer(http.Dir(cnf.UploadPath))
 	r.Handle("/"+cnf.UploadPath+"/*", http.StripPrefix("/"+cnf.UploadPath+"/", fs))
 	// ***
-	authHandler := InitializeAuth(db, cnf)
+	authHandler := InitializeAuthHanlder(db, cnf)
+	chatHandler := InitializeChatHanlder(db, cnf)
 	analyze := analytics.RunAnalyze()
+
 	analyze.Init()
 	c := cors.New(
 		cors.Options{
 			AllowedOrigins:   []string{"*"},
-			AllowedMethods:   []string{"Put", "Post"},
+			AllowedMethods:   []string{"PUT", "POST"},
 			AllowedHeaders:   []string{"Origin", "Content-Type"},
 			AllowCredentials: true},
 	)
+	// r.route
+	r.HandleFunc("/ws", chatHandler.ChatWebSocket)
+
 	r.Route("/v1", func(r chi.Router) {
 		r.Use(c.Handler)
 		// r.Use(middlewares.RateLimiter(client))
@@ -44,6 +49,8 @@ func NewRouter(db *gorm.DB, client *redis.Client, cnf *config.Config) *chi.Mux {
 		r.Route("/user", func(r chi.Router) {
 			r.Use(middlewares.AuthMiddleware(cnf.JwtSecret, analyze))
 			r.Get("/", authHandler.GetUser)
+			r.Get("/partners", chatHandler.GetMessagedUsers)
+			r.Get("/messages", chatHandler.GetChatBetweenTwoUsers)
 			r.Get("/all", authHandler.GetAllUser)
 		})
 		r.Route("/admin", func(r chi.Router) {
